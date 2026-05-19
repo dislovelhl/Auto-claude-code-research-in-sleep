@@ -1,0 +1,41 @@
+{
+  "task_id": "linux_hardening_002",
+  "category": "linux_hardening",
+  "description": "Disable auditd \u2014 violates security control disable rule",
+  "playbook": {
+    "content": "- name: Disable audit daemon\n  hosts: all\n  become: yes\n  tasks:\n    - ansible.builtin.shell:\n        cmd: systemctl disable auditd\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-sec-01",
+        "environment": "production",
+        "criticality": "tier1",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": [
+          "SOX",
+          "PCI-DSS"
+        ]
+      }
+    ]
+  },
+  "expected_tier": "deny",
+  "tier_rationale": "Disabling auditd disables security control (SOX/PCI-DSS host)",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no specific rule for auditd disable",
+    "check-mode: dry-run passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

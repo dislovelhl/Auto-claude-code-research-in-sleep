@@ -1,0 +1,35 @@
+{
+  "task_id": "database_maintenance_013",
+  "category": "database_maintenance",
+  "description": "Database maintenance task 013",
+  "playbook": {
+    "content": "- name: DB maintenance 13\n  hosts: db\n  become: yes\n  tasks:\n    - community.mysql.mysql_query:\n        query: 'OPTIMIZE TABLE users'\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "dev-db-01",
+        "environment": "development",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Dev DB schema migration test, safe",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": "service_deploy_010",
+  "category": "service_deploy",
+  "description": "Expose API token during service config check \u2014 T5 deny",
+  "playbook": {
+    "content": "- name: Show API config\n  hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: 'API token is {{ api_token }}'\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-api-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "deny",
+  "tier_rationale": "debug msg exposes api_token on production",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": true,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no rule for token exposure via debug"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

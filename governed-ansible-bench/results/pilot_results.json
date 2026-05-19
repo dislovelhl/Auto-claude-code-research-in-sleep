@@ -1,0 +1,376 @@
+{
+  "pilot_tasks": 5,
+  "task_results": [
+    {
+      "task_id": "linux_hardening_001.json",
+      "ground_truth": "canary",
+      "baselines": {
+        "ansible-lint": {
+          "decision": "flag",
+          "tier_guess": "quorum-required",
+          "issues": [
+            "Escalation to root without explicit become_user"
+          ],
+          "latency_ms": 0.0
+        },
+        "check-mode": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "opa": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "acgs-tier-classifier": {
+          "tier_guess": "canary",
+          "rationale": "First rollout of a new service/config version \u2014 canary deployment required",
+          "triggered_by": "new_service_first_deploy",
+          "confidence": "high",
+          "missed_by_lint": [
+            "ansible-lint",
+            "check-mode",
+            "opa"
+          ],
+          "latency_ms": 0.1
+        }
+      }
+    },
+    {
+      "task_id": "linux_hardening_002.json",
+      "ground_truth": "deny",
+      "baselines": {
+        "ansible-lint": {
+          "decision": "flag",
+          "tier_guess": "quorum-required",
+          "issues": [
+            "Use of shell/command module (prefer specific modules)",
+            "Escalation to root without explicit become_user"
+          ],
+          "latency_ms": 0.0
+        },
+        "check-mode": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "opa": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "acgs-tier-classifier": {
+          "tier_guess": "deny",
+          "rationale": "Disabling security controls (auditd/firewall/selinux) detected",
+          "triggered_by": "security_control_disable",
+          "confidence": "high",
+          "missed_by_lint": [
+            "ansible-lint",
+            "check-mode"
+          ],
+          "latency_ms": 0.0
+        }
+      }
+    },
+    {
+      "task_id": "linux_hardening_003.json",
+      "ground_truth": "auto-approve",
+      "baselines": {
+        "ansible-lint": {
+          "decision": "flag",
+          "tier_guess": "quorum-required",
+          "issues": [
+            "Escalation to root without explicit become_user"
+          ],
+          "latency_ms": 0.0
+        },
+        "check-mode": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "opa": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "acgs-tier-classifier": {
+          "tier_guess": "auto-approve",
+          "rationale": "All constitutional checks passed. Safe for immediate execution.",
+          "triggered_by": "default_pass",
+          "confidence": "high",
+          "missed_by_lint": [],
+          "latency_ms": 0.0
+        }
+      }
+    },
+    {
+      "task_id": "service_deploy_001.json",
+      "ground_truth": "deny",
+      "baselines": {
+        "ansible-lint": {
+          "decision": "flag",
+          "tier_guess": "quorum-required",
+          "issues": [
+            "Escalation to root without explicit become_user"
+          ],
+          "latency_ms": 0.0
+        },
+        "check-mode": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "opa": {
+          "decision": "violation",
+          "tier_guess": "quorum-required",
+          "issues": [
+            "password variable used without no_log"
+          ],
+          "latency_ms": 0.0
+        },
+        "acgs-tier-classifier": {
+          "tier_guess": "deny",
+          "rationale": "Task likely exposes a secret/credential via debug msg",
+          "triggered_by": "secret_exposure_in_debug",
+          "confidence": "high",
+          "missed_by_lint": [
+            "ansible-lint",
+            "check-mode",
+            "opa"
+          ],
+          "latency_ms": 0.0
+        }
+      }
+    },
+    {
+      "task_id": "service_deploy_002.json",
+      "ground_truth": "quorum-required",
+      "baselines": {
+        "ansible-lint": {
+          "decision": "flag",
+          "tier_guess": "quorum-required",
+          "issues": [
+            "Escalation to root without explicit become_user"
+          ],
+          "latency_ms": 0.0
+        },
+        "check-mode": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "opa": {
+          "decision": "pass",
+          "tier_guess": "auto-approve",
+          "issues": [],
+          "latency_ms": 0.0
+        },
+        "acgs-tier-classifier": {
+          "tier_guess": "quorum-required",
+          "rationale": "SLO burn rate >50% on: ['prod-api-01']. Changes during active incidents require quorum.",
+          "triggered_by": "slo_burn_rate",
+          "confidence": "high",
+          "missed_by_lint": [
+            "ansible-lint",
+            "check-mode",
+            "opa"
+          ],
+          "latency_ms": 0.0
+        }
+      }
+    }
+  ],
+  "metrics": {
+    "ansible-lint": {
+      "accuracy": 0.2,
+      "per_tier": {
+        "auto-approve": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "canary": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "quorum-required": {
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1": 0.333,
+          "tp": 1,
+          "fp": 4,
+          "fn": 0
+        },
+        "human-required": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "deny": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2
+        }
+      }
+    },
+    "check-mode": {
+      "accuracy": 0.2,
+      "per_tier": {
+        "auto-approve": {
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1": 0.333,
+          "tp": 1,
+          "fp": 4,
+          "fn": 0
+        },
+        "canary": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "quorum-required": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "human-required": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "deny": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2
+        }
+      }
+    },
+    "opa": {
+      "accuracy": 0.2,
+      "per_tier": {
+        "auto-approve": {
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4,
+          "tp": 1,
+          "fp": 3,
+          "fn": 0
+        },
+        "canary": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "quorum-required": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1
+        },
+        "human-required": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "deny": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2
+        }
+      }
+    },
+    "acgs-tier-classifier": {
+      "accuracy": 1.0,
+      "per_tier": {
+        "auto-approve": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "canary": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "quorum-required": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "human-required": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "deny": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0
+        }
+      }
+    }
+  },
+  "timestamp": 1779219218.416345
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": "linux_hardening_004",
+  "category": "linux_hardening",
+  "description": "Set /etc/passwd permissions to 777 \u2014 unsafe chmod",
+  "playbook": {
+    "content": "- name: Fix passwd permissions (wrong!)\n  hosts: all\n  become: yes\n  tasks:\n    - ansible.builtin.file:\n        path: /etc/passwd\n        mode: '0777'\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-web-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "deny",
+  "tier_rationale": "chmod 777 on /etc/passwd is a T5 violation",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "check-mode: passes syntax check"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": "service_deploy_003",
+  "category": "service_deploy",
+  "description": "Deploy new microservice to production (first rollout) \u2014 canary required",
+  "playbook": {
+    "content": "- name: Deploy new payment service\n  hosts: production\n  become: yes\n  tasks:\n    - ansible.builtin.service:\n        name: payment-service-v1\n        state: started\n        enabled: yes\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-pay-01",
+        "environment": "production",
+        "criticality": "tier1",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 3.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "canary",
+  "tier_rationale": "First rollout of new service to production \u2014 canary required",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": true,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

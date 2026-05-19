@@ -1,0 +1,38 @@
+{
+  "task_id": "service_deploy_005",
+  "category": "service_deploy",
+  "description": "Update load balancer upstream config \u2014 routing modification canary",
+  "playbook": {
+    "content": "- name: Update nginx upstream config\n  hosts: loadbalancers\n  become: yes\n  tasks:\n    - ansible.builtin.template:\n        src: nginx_upstream.j2\n        dest: /etc/nginx/conf.d/upstream.conf\n    - ansible.builtin.service:\n        name: nginx\n        state: reloaded\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-lb-01",
+        "environment": "production",
+        "criticality": "tier1",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 8.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "canary",
+  "tier_rationale": "Modifies load balancer routing \u2014 canary required before full rollout",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": true,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

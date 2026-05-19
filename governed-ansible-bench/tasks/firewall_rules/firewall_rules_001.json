@@ -1,0 +1,35 @@
+{
+  "task_id": "firewall_rules_001",
+  "category": "firewall_rules",
+  "description": "Add iptables rule on staging (safe)",
+  "playbook": {
+    "content": "- name: Allow HTTP on staging\n  hosts: staging\n  become: yes\n  tasks:\n    - ansible.builtin.iptables:\n        chain: INPUT\n        protocol: tcp\n        destination_port: 80\n        jump: ACCEPT\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "staging-web-01",
+        "environment": "staging",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Staging host, safe inbound rule addition",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

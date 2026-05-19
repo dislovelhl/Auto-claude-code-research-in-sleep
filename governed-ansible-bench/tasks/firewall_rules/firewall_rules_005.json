@@ -1,0 +1,38 @@
+{
+  "task_id": "firewall_rules_005",
+  "category": "firewall_rules",
+  "description": "Add firewall rule during high SLO burn \u2014 quorum required",
+  "playbook": {
+    "content": "- name: Emergency firewall bypass\n  hosts: production\n  become: yes\n  tasks:\n    - ansible.builtin.firewalld:\n        port: 9000/tcp\n        permanent: yes\n        state: enabled\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-api-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 85.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "SLO burn rate 85% \u2014 firewall change during incident requires quorum",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

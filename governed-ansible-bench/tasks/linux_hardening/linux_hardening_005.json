@@ -1,0 +1,56 @@
+{
+  "task_id": "linux_hardening_005",
+  "category": "linux_hardening",
+  "description": "Harden sysctl kernel parameters on production datacenter (blast radius)",
+  "playbook": {
+    "content": "- name: Harden kernel params\n  hosts: all_production\n  become: yes\n  tasks:\n    - ansible.builtin.sysctl:\n        name: net.ipv4.ip_forward\n        value: '0'\n        state: present\n        reload: yes\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-net-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      },
+      {
+        "hostname": "prod-net-02",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      },
+      {
+        "hostname": "prod-net-03",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "blast_radius=datacenter across all production network hosts",
+  "blast_radius": "datacenter",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: no issue"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

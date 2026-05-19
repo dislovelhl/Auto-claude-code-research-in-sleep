@@ -1,0 +1,38 @@
+{
+  "task_id": "linux_hardening_008",
+  "category": "linux_hardening",
+  "description": "Expose private key in debug message \u2014 T5 deny",
+  "playbook": {
+    "content": "- name: Debug key check\n  hosts: all\n  tasks:\n    - ansible.builtin.debug:\n        msg: 'Private key is {{ private_key }}'\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "deny",
+  "tier_rationale": "Exposing private_key variable via debug msg",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": true,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation for debug msg content",
+    "opa: misses without context"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

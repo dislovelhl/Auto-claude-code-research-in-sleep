@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GovernedAnsibleBench Task Schema",
+  "description": "Schema for a single benchmark task in GovernedAnsibleBench",
+  "type": "object",
+  "required": [
+    "task_id", "category", "description", "playbook", "inventory",
+    "expected_tier", "expected_rationale", "difficulty",
+    "blast_radius", "reversibility", "privilege_required"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "Unique identifier, e.g., linux_hardening_001",
+      "pattern": "^[a-z_]+_[0-9]{3}$"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "linux_hardening", "service_deploy", "cloud_provisioning",
+        "secrets_rotation", "firewall_rules", "database_maintenance",
+        "incident_remediation", "canary_deploy"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what the playbook does"
+    },
+    "playbook": {
+      "type": "object",
+      "description": "Inline playbook content or path reference",
+      "properties": {
+        "path": { "type": "string" },
+        "content": { "type": "string" }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "description": "Inventory metadata for context-aware governance decisions",
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "hostname": { "type": "string" },
+              "environment": { "type": "string", "enum": ["production", "staging", "development"] },
+              "criticality": { "type": "string", "enum": ["tier1", "tier2", "tier3"] },
+              "in_maintenance_window": { "type": "boolean" },
+              "slo_burn_rate_1h": { "type": "number", "minimum": 0, "maximum": 100 },
+              "has_sensitive_data": { "type": "boolean" },
+              "regulatory_scope": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "groups": {
+          "type": "object",
+          "description": "Group variables and memberships"
+        }
+      }
+    },
+    "expected_tier": {
+      "type": "string",
+      "enum": ["auto-approve", "canary", "quorum-required", "human-required", "deny"],
+      "description": "Expert-labeled governance decision tier"
+    },
+    "tier_rationale": {
+      "type": "string",
+      "description": "Why this tier was assigned (for annotation guide)"
+    },
+    "expected_rollback": {
+      "type": "object",
+      "description": "Rollback DAG structure for risky changes (optional for auto-approve)",
+      "properties": {
+        "required": { "type": "boolean" },
+        "rollback_playbook_path": { "type": "string" },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard"],
+      "description": "How hard it is to correctly classify this task"
+    },
+    "blast_radius": {
+      "type": "string",
+      "enum": ["single_host", "host_group", "datacenter", "multi_region", "global"],
+      "description": "Scope of impact if the change goes wrong"
+    },
+    "reversibility": {
+      "type": "string",
+      "enum": ["fully_reversible", "partially_reversible", "irreversible"],
+      "description": "Whether the change can be cleanly rolled back"
+    },
+    "privilege_required": {
+      "type": "string",
+      "enum": ["unprivileged", "sudo", "root", "cloud_admin"],
+      "description": "Privilege level needed for execution"
+    },
+    "involves_secrets": {
+      "type": "boolean",
+      "description": "Whether the playbook touches secrets/credentials"
+    },
+    "common_mistakes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Known ways ansible-lint/check-mode miss this task's risks"
+    },
+    "variant_type": {
+      "type": "string",
+      "enum": ["correct", "overprivileged", "non_idempotent", "blast_radius_too_large", "missing_rollback", "secret_exposure"],
+      "description": "What kind of task variant this is"
+    },
+    "annotation_sre_count": {
+      "type": "integer",
+      "description": "Number of SRE annotators who labeled this task"
+    },
+    "annotation_kappa": {
+      "type": "number",
+      "description": "Inter-rater agreement (Fleiss kappa) for this task"
+    },
+    "testbed": {
+      "type": "object",
+      "description": "Executable testbed for this task",
+      "properties": {
+        "type": { "type": "string", "enum": ["docker", "molecule", "none"] },
+        "compose_file": { "type": "string" },
+        "molecule_scenario": { "type": "string" }
+      }
+    }
+  }
+}

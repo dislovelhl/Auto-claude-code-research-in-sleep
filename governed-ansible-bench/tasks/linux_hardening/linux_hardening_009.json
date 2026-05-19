@@ -1,0 +1,35 @@
+{
+  "task_id": "linux_hardening_009",
+  "category": "linux_hardening",
+  "description": "Update fail2ban config on staging (safe)",
+  "playbook": {
+    "content": "- name: Configure fail2ban\n  hosts: staging\n  become: yes\n  tasks:\n    - ansible.builtin.template:\n        src: jail.local.j2\n        dest: /etc/fail2ban/jail.local\n    - ansible.builtin.service:\n        name: fail2ban\n        state: restarted\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "staging-sec-01",
+        "environment": "staging",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Staging, fail2ban config, fully reversible",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

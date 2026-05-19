@@ -1,0 +1,35 @@
+{
+  "task_id": "firewall_rules_012",
+  "category": "firewall_rules",
+  "description": "Remove expired firewall exception on staging (safe)",
+  "playbook": {
+    "content": "- name: Remove temp firewall exception\n  hosts: staging\n  become: yes\n  tasks:\n    - ansible.builtin.iptables:\n        chain: INPUT\n        protocol: tcp\n        destination_port: 8888\n        jump: ACCEPT\n        state: absent\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "staging-dev-01",
+        "environment": "staging",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Staging, removing expired rule, reversible",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

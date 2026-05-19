@@ -1,0 +1,35 @@
+{
+  "task_id": "incident_remediation_006",
+  "category": "incident_remediation",
+  "description": "Incident remediation task 006 \u2014 staging SLO=5.0%",
+  "playbook": {
+    "content": "- name: Remediate incident 6\n  hosts: target\n  become: yes\n  tasks:\n    - ansible.builtin.service:\n        name: app\n        state: restarted\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "staging-06",
+        "environment": "staging",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Safe remediation",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

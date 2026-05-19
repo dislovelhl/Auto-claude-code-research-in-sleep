@@ -1,0 +1,35 @@
+{
+  "task_id": "linux_hardening_012",
+  "category": "linux_hardening",
+  "description": "Enable firewalld on staging for new service requirement",
+  "playbook": {
+    "content": "- name: Enable firewalld\n  hosts: staging\n  become: yes\n  tasks:\n    - ansible.builtin.service:\n        name: firewalld\n        state: started\n        enabled: yes\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "staging-app-01",
+        "environment": "staging",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Staging host, enabling (not disabling) security control, reversible",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

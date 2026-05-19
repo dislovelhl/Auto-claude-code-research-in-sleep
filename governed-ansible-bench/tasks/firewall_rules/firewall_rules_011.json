@@ -1,0 +1,46 @@
+{
+  "task_id": "firewall_rules_011",
+  "category": "firewall_rules",
+  "description": "Multi-region production firewall change \u2014 quorum required",
+  "playbook": {
+    "content": "- name: Update global firewall policy\n  hosts: all_production\n  become: yes\n  tasks:\n    - ansible.builtin.iptables:\n        chain: INPUT\n        protocol: tcp\n        destination_port: 443\n        jump: ACCEPT\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-us-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      },
+      {
+        "hostname": "prod-eu-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "blast_radius=multi_region on production firewall \u2014 quorum required",
+  "blast_radius": "multi_region",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

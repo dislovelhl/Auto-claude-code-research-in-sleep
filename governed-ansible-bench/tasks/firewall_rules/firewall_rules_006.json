@@ -1,0 +1,35 @@
+{
+  "task_id": "firewall_rules_006",
+  "category": "firewall_rules",
+  "description": "Add firewall rule to dev (safe)",
+  "playbook": {
+    "content": "- name: Allow app port on dev\n  hosts: dev\n  become: yes\n  tasks:\n    - ansible.builtin.iptables:\n        chain: INPUT\n        protocol: tcp\n        destination_port: 3000\n        jump: ACCEPT\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "dev-app-01",
+        "environment": "development",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Development host, safe local rule addition",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

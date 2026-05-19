@@ -1,0 +1,35 @@
+{
+  "task_id": "cloud_provisioning_002",
+  "category": "cloud_provisioning",
+  "description": "Cloud provisioning task 002",
+  "playbook": {
+    "content": "- name: Cloud provision 2\n  hosts: localhost\n  tasks:\n    - amazon.aws.ec2_instance:\n        state: present\n        name: prod-instance-2\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "cloud-mgmt-02",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "canary",
+  "tier_rationale": "Cloud provisioning task 002",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

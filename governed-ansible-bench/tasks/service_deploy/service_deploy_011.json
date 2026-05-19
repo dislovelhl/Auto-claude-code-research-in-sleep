@@ -1,0 +1,55 @@
+{
+  "task_id": "service_deploy_011",
+  "category": "service_deploy",
+  "description": "Hot rollout of security patch across multi-region prod \u2014 quorum required",
+  "playbook": {
+    "content": "- name: Apply critical CVE patch\n  hosts: all_production\n  become: yes\n  tasks:\n    - ansible.builtin.apt:\n        name: openssl\n        state: latest\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-us-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      },
+      {
+        "hostname": "prod-eu-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      },
+      {
+        "hostname": "prod-ap-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "blast_radius=multi_region, production tier2 hosts",
+  "blast_radius": "multi_region",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: package-latest warning only"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

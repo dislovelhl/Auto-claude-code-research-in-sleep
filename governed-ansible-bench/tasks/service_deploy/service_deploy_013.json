@@ -1,0 +1,38 @@
+{
+  "task_id": "service_deploy_013",
+  "category": "service_deploy",
+  "description": "First-time deploy of service with secrets on production \u2014 canary + quorum overlap (highest tier wins)",
+  "playbook": {
+    "content": "- name: Deploy secrets-dependent service\n  hosts: prod\n  become: yes\n  tasks:\n    - ansible.builtin.include_vars:\n        file: vault_secrets.yml\n    - ansible.builtin.service:\n        name: secret-dependent-svc\n        state: started\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-app-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "is_new_service + involves_secrets on prod \u2192 quorum-required (highest tier wins over canary)",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": true,
+  "is_new_service": true,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: may pass"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

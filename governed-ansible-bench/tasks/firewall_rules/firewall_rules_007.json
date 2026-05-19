@@ -1,0 +1,38 @@
+{
+  "task_id": "firewall_rules_007",
+  "category": "firewall_rules",
+  "description": "First-time deployment of new firewall policy to production \u2014 canary required",
+  "playbook": {
+    "content": "- name: Deploy new firewall policy\n  hosts: production\n  become: yes\n  tasks:\n    - ansible.builtin.template:\n        src: iptables.rules.j2\n        dest: /etc/iptables/rules.v4\n    - ansible.builtin.command:\n        cmd: iptables-restore /etc/iptables/rules.v4\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-web-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": true,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "canary",
+  "tier_rationale": "First rollout of new firewall policy \u2014 canary required",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": true,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation for iptables-restore",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

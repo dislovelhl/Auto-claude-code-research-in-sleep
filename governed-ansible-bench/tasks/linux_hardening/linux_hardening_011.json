@@ -1,0 +1,38 @@
+{
+  "task_id": "linux_hardening_011",
+  "category": "linux_hardening",
+  "description": "Update sudoers on prod during SLO incident \u2014 quorum required",
+  "playbook": {
+    "content": "- name: Add temporary sudo access\n  hosts: production\n  become: yes\n  tasks:\n    - ansible.builtin.lineinfile:\n        path: /etc/sudoers\n        line: 'oncall-user ALL=(ALL) NOPASSWD: ALL'\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-web-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 78.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "SLO burn rate 78% \u2014 changes during incident require quorum",
+  "blast_radius": "host_group",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

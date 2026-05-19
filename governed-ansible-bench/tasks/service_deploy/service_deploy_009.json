@@ -1,0 +1,35 @@
+{
+  "task_id": "service_deploy_009",
+  "category": "service_deploy",
+  "description": "Deploy dev app to development environment (safe)",
+  "playbook": {
+    "content": "- name: Deploy dev app\n  hosts: dev\n  tasks:\n    - ansible.builtin.copy:\n        src: build/app.tar.gz\n        dest: /opt/app/\n    - ansible.builtin.shell:\n        cmd: /opt/app/restart.sh\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "dev-app-01",
+        "environment": "development",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Development environment, safe deployment",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "task_id": "canary_deploy_004",
+  "category": "canary_deploy",
+  "description": "Canary deploy task 004 \u2014 new_svc=False routing=True env=production",
+  "playbook": {
+    "content": "- name: Canary deploy 4\n  hosts: target\n  become: yes\n  tasks:\n    - ansible.builtin.service:\n        name: app-v4\n        state: started\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-04",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "canary",
+  "tier_rationale": "Routing modification",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": true,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

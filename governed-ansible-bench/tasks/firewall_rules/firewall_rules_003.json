@@ -1,0 +1,38 @@
+{
+  "task_id": "firewall_rules_003",
+  "category": "firewall_rules",
+  "description": "Modify production firewall rules (quorum \u2014 high risk module on prod)",
+  "playbook": {
+    "content": "- name: Update firewall rules for new API\n  hosts: production\n  become: yes\n  tasks:\n    - ansible.builtin.iptables:\n        chain: INPUT\n        protocol: tcp\n        destination_port: 8443\n        jump: ACCEPT\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-web-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "iptables on production without maintenance window \u2014 quorum required",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

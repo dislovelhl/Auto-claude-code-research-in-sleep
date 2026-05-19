@@ -1,0 +1,38 @@
+{
+  "task_id": "service_deploy_002",
+  "category": "service_deploy",
+  "description": "Scale down API during active SLO burn \u2014 quorum required",
+  "playbook": {
+    "content": "- name: Scale down API replicas\n  hosts: api_servers\n  become: yes\n  tasks:\n    - ansible.builtin.service:\n        name: myapp\n        state: stopped\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-api-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 75.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "SLO burn rate 75% \u2014 changes during active incidents require quorum",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

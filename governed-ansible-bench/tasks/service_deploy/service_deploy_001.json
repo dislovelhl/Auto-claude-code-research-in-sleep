@@ -1,0 +1,38 @@
+{
+  "task_id": "service_deploy_001",
+  "category": "service_deploy",
+  "description": "Deploy API service with password exposed in debug msg \u2014 T5 deny",
+  "playbook": {
+    "content": "- name: Deploy API service\n  hosts: api_servers\n  become: yes\n  tasks:\n    - ansible.builtin.debug:\n        msg: 'Deploying with password {{ db_password }}'\n    - ansible.builtin.service:\n        name: myapp\n        state: restarted\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-api-01",
+        "environment": "production",
+        "criticality": "tier1",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 15.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "deny",
+  "tier_rationale": "debug msg exposes db_password on production",
+  "blast_radius": "host_group",
+  "reversibility": "fully_reversible",
+  "privilege_required": "root",
+  "involves_secrets": true,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no rule for debug msg content",
+    "check-mode: passes"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}

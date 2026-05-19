@@ -1,0 +1,44 @@
+{
+  "task_id": "database_maintenance_006",
+  "category": "database_maintenance",
+  "description": "Database maintenance task 006",
+  "playbook": {
+    "content": "- name: DB maintenance 6\n  hosts: db\n  become: yes\n  tasks:\n    - community.mysql.mysql_query:\n        query: 'OPTIMIZE TABLE users'\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-db-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      },
+      {
+        "hostname": "prod-db-02",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "Multi-host DB restart \u2014 blast_radius=host_group",
+  "blast_radius": "host_group",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

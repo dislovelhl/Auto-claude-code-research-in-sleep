@@ -1,0 +1,35 @@
+{
+  "task_id": "incident_remediation_003",
+  "category": "incident_remediation",
+  "description": "Incident remediation task 003 \u2014 production SLO=85.0%",
+  "playbook": {
+    "content": "- name: Remediate incident 3\n  hosts: target\n  become: yes\n  tasks:\n    - ansible.builtin.service:\n        name: app\n        state: restarted\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-03",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 85.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "quorum-required",
+  "tier_rationale": "SLO burn=85.0% on prod \u2014 quorum required",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "hard",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "task_id": "firewall_rules_010",
+  "category": "firewall_rules",
+  "description": "Open development port range (safe)",
+  "playbook": {
+    "content": "- name: Open dev port range\n  hosts: dev\n  become: yes\n  tasks:\n    - ansible.builtin.iptables:\n        chain: INPUT\n        protocol: tcp\n        destination_port: 9000:9100\n        jump: ACCEPT\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "dev-01",
+        "environment": "development",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Development environment, internal port range, safe",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

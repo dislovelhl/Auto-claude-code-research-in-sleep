@@ -1,0 +1,35 @@
+{
+  "task_id": "canary_deploy_011",
+  "category": "canary_deploy",
+  "description": "Canary deploy task 011 \u2014 new_svc=False routing=False env=staging",
+  "playbook": {
+    "content": "- name: Canary deploy 11\n  hosts: target\n  become: yes\n  tasks:\n    - ansible.builtin.service:\n        name: app-v11\n        state: started\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "staging-11",
+        "environment": "staging",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Safe staging deploy",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

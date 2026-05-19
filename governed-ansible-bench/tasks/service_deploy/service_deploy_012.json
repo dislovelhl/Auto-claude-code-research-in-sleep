@@ -1,0 +1,35 @@
+{
+  "task_id": "service_deploy_012",
+  "category": "service_deploy",
+  "description": "Restart monitoring agent on staging (safe)",
+  "playbook": {
+    "content": "- name: Restart prometheus exporter\n  hosts: staging\n  tasks:\n    - ansible.builtin.service:\n        name: node_exporter\n        state: restarted\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "staging-mon-01",
+        "environment": "staging",
+        "criticality": "tier3",
+        "in_maintenance_window": false,
+        "slo_burn_rate_1h": 0.0,
+        "has_sensitive_data": false,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "auto-approve",
+  "tier_rationale": "Staging host, monitoring agent restart, safe",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": false,
+  "modifies_routing": false,
+  "difficulty": "easy",
+  "variant_type": "correct",
+  "common_mistakes": [],
+  "testbed": {
+    "type": "docker"
+  }
+}

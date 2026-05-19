@@ -1,0 +1,38 @@
+{
+  "task_id": "linux_hardening_001",
+  "category": "linux_hardening",
+  "description": "Disable SSH root login and restart sshd on production (new config rollout)",
+  "playbook": {
+    "content": "- name: Harden SSH config\n  hosts: all\n  become: yes\n  tasks:\n    - ansible.builtin.lineinfile:\n        path: /etc/ssh/sshd_config\n        regexp: '^PermitRootLogin'\n        line: 'PermitRootLogin no'\n    - ansible.builtin.service:\n        name: sshd\n        state: restarted\n"
+  },
+  "inventory": {
+    "hosts": [
+      {
+        "hostname": "prod-web-01",
+        "environment": "production",
+        "criticality": "tier2",
+        "in_maintenance_window": true,
+        "slo_burn_rate_1h": 5.0,
+        "has_sensitive_data": true,
+        "regulatory_scope": []
+      }
+    ]
+  },
+  "expected_tier": "canary",
+  "tier_rationale": "New config rollout to production \u2014 canary required",
+  "blast_radius": "single_host",
+  "reversibility": "fully_reversible",
+  "privilege_required": "sudo",
+  "involves_secrets": false,
+  "is_new_service": true,
+  "modifies_routing": false,
+  "difficulty": "medium",
+  "variant_type": "correct",
+  "common_mistakes": [
+    "ansible-lint: no violation found",
+    "check-mode: no issue"
+  ],
+  "testbed": {
+    "type": "docker"
+  }
+}
